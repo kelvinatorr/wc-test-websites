@@ -1,6 +1,5 @@
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 144px);
   gap: 0;
   padding: 0;
   width: 100%;
@@ -8,8 +7,6 @@
 }
 
 .grid-square {
-  width: 144px;
-  height: 144px;
   border: 1px solid #333;
   display: flex;
   align-items: center;
