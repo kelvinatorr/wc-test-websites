@@ -1,0 +1,2 @@
+.app{height:100%;width:100%}.grid-container{grid-gap:0;background-color:#0a0a0a;display:grid;gap:0;padding:0;width:100%}.grid-square{align-items:center;background-color:#1a1a1a;border:1px solid #333;color:#0f0;display:flex;flex-shrink:0;font-size:48px;font-weight:700;justify-content:center}.grid-square.filled{background-color:#0d3d0d}*{box-sizing:border-box;margin:0;padding:0}body{background-color:#0a0a0a;font-family:Arial,sans-serif}#root{height:100vh;overflow:auto;width:100vw}
+/*# sourceMappingURL=main.7972d5e6.css.map*/
