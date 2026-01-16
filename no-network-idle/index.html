@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Network Idle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>No Network Idle</h1>
+        <div class="subtitle">Continuous Network Activity</div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Status</div>
+                <div class="stat-value" id="status">Initializing...</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Requests</div>
+                <div class="stat-value" id="total-requests">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Successful</div>
+                <div class="stat-value green" id="successful">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Failed</div>
+                <div class="stat-value red" id="failed">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Requests</div>
+                <div class="stat-value" id="active-requests">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Elapsed Time</div>
+                <div class="stat-value" id="elapsed-time">0s</div>
+            </div>
+        </div>
+
+        <div class="config-info">
+            <div class="config-item">Interval: <span id="config-interval">-</span>ms</div>
+            <div class="config-item">Concurrency: <span id="config-concurrency">-</span></div>
+            <div class="config-item">Duration: <span id="config-duration">-</span></div>
+            <div class="config-item">Payload Size: <span id="config-size">-</span></div>
+        </div>
+
+        <div class="controls">
+            <button id="stop-button" class="stop-button">Stop Activity</button>
+        </div>
+
+        <div class="activity-log">
+            <div class="log-header">Recent Activity</div>
+            <div class="log-content" id="activity-log"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
