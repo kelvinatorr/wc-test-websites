@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Spid11 React Scroll</title>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding:0;
+            background: #1c2741;
+            color: rgba(255, 255, 255, 0.218);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .metrics {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            text-align: center;
+            pointer-events: none;
+            line-height: 2;
+            white-space: none;
+        }
+
+        .mouse-circle {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgb(255, 0, 0);
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script>
+        const { useState, useEffect } = React;
+
+        function getQueryHeight() {
+            const params = new URLSearchParams(window.location.search);
+            const value = Number(params.get("height"));
+
+            if (!params.has("height")) return 5000;
+            if (isNaN(value) || value < 0) return 0;
+            return value;
+        }
+        function App() {
+            const [mouse, setMouse] = React.useState({ x: 0, y: 0 });
+            const [metrics, setMetrics] = React.useState({
+                scrollHeight: 0,
+                scrollWidth: 0,
+                scrollX: 0,
+                scrollY: 0
+            });
+
+            React.useEffect(() => {
+                const pageHeight = getQueryHeight();
+                document.body.style.height = pageHeight + "px";
+                
+                function updateMetrics() {
+                    setMetrics({
+                        scrollHeight: document.documentElement.scrollHeight,
+                        scrollWidth: document.documentElement.scrollWidth,
+                        scrollX: window.scrollX,
+                        scrollY: window.scrollY,
+                    });
+                }
+
+                function mouseMove(e) {
+                    setMouse({
+                        x: e.clientX + window.scrollX,
+                        y: e.clientY + window.scrollY
+                    });
+                }
+                window.addEventListener("scroll", updateMetrics);
+                window.addEventListener("resize", updateMetrics);
+                window.addEventListener("mousemove", mouseMove);
+
+                updateMetrics();
+
+                return function tidy() {
+                    window.removeEventListener("scroll", updateMetrics);
+                    window.removeEventListener("resize", updateMetrics);
+                    window.removeEventListener("mousemove", mouseMove);
+                };
+            },[]);
+
+            return React.createElement(
+                React.Fragment,
+                null,
+
+                React.createElement(
+                    "div",
+                    {
+                        className: "metrics",
+                        style: { position: "fixed" }
+                    },
+                    `mouseX: ${mouse.x}
+mouseY: ${ mouse.y }
+scrollWidth: ${metrics.scrollWidth}
+scrollHeight: ${metrics.scrollHeight}
+scrollX: ${metrics.scrollX}
+scrollY: ${metrics.scrollY}`
+
+                ),
+                React.createElement(
+                    "div",
+                    {
+                        className: "mouse-circle",
+                        style: {
+                            left: mouse.x - window.scrollX + "px",
+                            top: mouse.y - window.scrollY + "px",
+                            position: "fixed"
+                        }
+                    }
+                )
+            );
+        }
+        
+        window.addEventListener("DOMContentLoaded", function(){
+            const rootElement = document.getElementById("root");
+            const root = ReactDOM.createRoot(rootElement);
+            root.render(React.createElement(App));
+    });
+    </script>
+</body>
+
+</html>
