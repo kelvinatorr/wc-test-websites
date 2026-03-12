@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>FingerprintJS Demo</title>
+  <style>
+    body {
+      background: #282c34; color: #e1e5ea;
+      padding: 1.25em; margin: 0; font-family: sans-serif;
+    }
+    .buttons { margin-bottom: 0.8em; }
+    .buttons button { margin: 0 0.8em 0.8em 0; }
+    button {
+      border: none; background: #f04405; color: #fff; font: inherit;
+      font-size: 88%; font-weight: 600; line-height: 1.2; border-radius: 0.57em;
+      cursor: pointer; padding: 0.85em 1.7em; outline: none; transition: all 0.25s ease-out;
+    }
+    button:hover { background: #8c2703; }
+    button:active { background: #cd3f10; }
+    button:disabled { cursor: not-allowed; background: #e9987c; }
+    #output pre { padding: 0; margin: 0; font-size: 150%; font-family: monospace; white-space: pre-wrap; word-break: break-all; }
+    #output pre.big { font-size: 175%; }
+    #output pre.giant { font-size: 200%; }
+    #output .heading { font-size: 120%; margin-bottom: 0.5em; color: #eac4a6; }
+    #output .heading:not(:first-child) { margin-top: 2em; }
+  </style>
+</head>
+<body>
+  <div class="buttons">
+    <button disabled id="debugCopy">Copy Debug Data</button>
+  </div>
+  <section id="output">
+    <div class="heading">Getting the visitor identifier...</div>
+  </section>
+
+  <script src="fp.min.js"></script>
+  <script>
+    async function startPlayground() {
+      const output = document.getElementById('output');
+      const startTime = Date.now();
+
+      try {
+        const fp = await FingerprintJS.load({ debug: true });
+        const result = await fp.get();
+        const visitorId = result.visitorId;
+        const confidence = result.confidence;
+        const components = result.components;
+        const totalTime = Date.now() - startTime;
+
+        output.innerHTML = '';
+        addSection('Visitor identifier:', visitorId, 'giant');
+        addSection('Time took to get the identifier:', totalTime + 'ms', 'big');
+        addSection('Confidence score:', String(confidence.score), 'big');
+        addSection('User agent:', navigator.userAgent);
+        addSection('Entropy components:', FingerprintJS.componentsToDebugString(components));
+
+        const debugText = 'Visitor ID: ' + visitorId + '\n'
+          + 'Time it took to get the identifier: ' + totalTime + 'ms\n'
+          + 'Confidence: ' + JSON.stringify(confidence) + '\n'
+          + 'User agent: ' + navigator.userAgent + '\n'
+          + 'Components:\n' + FingerprintJS.componentsToDebugString(components);
+
+        const copyBtn = document.getElementById('debugCopy');
+        copyBtn.disabled = false;
+        copyBtn.addEventListener('click', function () {
+          navigator.clipboard.writeText(debugText).catch(function () {});
+        });
+
+      } catch (error) {
+        const totalTime = Date.now() - startTime;
+        output.innerHTML = '';
+        addSection('Unexpected error:', JSON.stringify(error, null, 2));
+        addSection('Time passed before the error:', totalTime + 'ms', 'big');
+        addSection('User agent:', navigator.userAgent);
+      }
+    }
+
+    function addSection(header, content, size) {
+      var output = document.getElementById('output');
+      var h = document.createElement('div');
+      h.className = 'heading';
+      h.textContent = header;
+      output.appendChild(h);
+
+      var pre = document.createElement('pre');
+      pre.textContent = content;
+      if (size) pre.classList.add(size);
+      output.appendChild(pre);
+    }
+
+    startPlayground();
+  </script>
+</body>
+</html>
